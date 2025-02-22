@@ -22,16 +22,12 @@ namespace TensionDev.UUID
     /// <summary>
     /// Class Library to generate Universally Unique Identifier (UUID) / Globally Unique Identifier (GUID) based on Version 7 (date-time).
     /// </summary>
-    public class UUIDv7
+    public static class UUIDv7
     {
-        protected internal static readonly DateTime s_epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime s_epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        protected internal static UInt16 s_counter = 0;
-        protected internal static readonly Object s_counterLock = new Object();
-
-        protected UUIDv7()
-        {
-        }
+        private static UInt16 s_counter = 0;
+        private static readonly Object s_counterLock = new Object();
 
         public enum GenerationMethod
         {

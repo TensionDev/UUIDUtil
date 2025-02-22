@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v2.1.0] - 2024-06-05
 [v2.1.0](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.1.0)
 
+### Changed
+- Changed Classes to static with private fields.
+
+
+## [v2.1.0] - 2024-06-05
+[v2.1.0](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.1.0)
+
 
 ## [v2.1.0-beta] - 2024-06-05
 [v2.1.0-beta](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.1.0-beta)

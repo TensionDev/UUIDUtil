@@ -21,17 +21,13 @@ namespace TensionDev.UUID
     /// <summary>
     /// Class Library to generate Universally Unique Identifier (UUID) / Globally Unique Identifier (GUID) based on Version 6 (date-time).
     /// </summary>
-    public class UUIDv6
+    public static class UUIDv6
     {
-        protected internal static Int32 s_clock = Int32.MinValue;
-        protected internal static readonly DateTime s_epoch = new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
+        private static Int32 s_clock = Int32.MinValue;
+        private static readonly DateTime s_epoch = new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
-        protected internal static readonly Object s_initLock = new Object();
-        protected internal static readonly Object s_clockLock = new Object();
-
-        protected UUIDv6()
-        {
-        }
+        private static readonly Object s_initLock = new Object();
+        private static readonly Object s_clockLock = new Object();
 
         /// <summary>
         /// Initialises a new GUID/UUID based on Version 6 (date-time)

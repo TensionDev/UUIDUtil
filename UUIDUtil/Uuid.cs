@@ -27,7 +27,7 @@ namespace TensionDev.UUID
         private readonly uint _time_low;
         private readonly ushort _time_mid;
         private readonly ushort _time_hi_and_version;
-        private byte _clock_seq_hi_and_reserved;
+        private readonly byte _clock_seq_hi_and_reserved;
         private readonly byte _clock_seq_low;
         private readonly byte[] _node;
 
@@ -355,10 +355,9 @@ namespace TensionDev.UUID
         {
             byte newClockSeq = (byte)(_clock_seq_hi_and_reserved & 0x1F);
             newClockSeq = (byte)(newClockSeq | 0xC0);
-            Uuid variant2 = new Uuid(this.ToByteArray())
-            {
-                _clock_seq_hi_and_reserved = newClockSeq
-            };
+            byte[] array = ToByteArray();
+            array[8] = newClockSeq;
+            Uuid variant2 = new Uuid(array);
 
             return variant2.ToGuid();
         }
@@ -373,10 +372,9 @@ namespace TensionDev.UUID
             Uuid variant2 = new Uuid(guid.ToString());
             byte newClockSeq = (byte)(variant2._clock_seq_hi_and_reserved & 0x3F);
             newClockSeq = (byte)(newClockSeq | 0x80);
-            Uuid variant1 = new Uuid(variant2.ToByteArray())
-            {
-                _clock_seq_hi_and_reserved = newClockSeq
-            };
+            byte[] array = variant2.ToByteArray();
+            array[8] = newClockSeq;
+            Uuid variant1 = new Uuid(array);
 
             return variant1;
         }
