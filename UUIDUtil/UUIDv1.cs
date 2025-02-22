@@ -21,18 +21,14 @@ namespace TensionDev.UUID
     /// <summary>
     /// Class Library to generate Universally Unique Identifier (UUID) / Globally Unique Identifier (GUID) based on Version 1 (date-time and MAC address).
     /// </summary>
-    public class UUIDv1
+    public static class UUIDv1
     {
-        protected internal static System.Net.NetworkInformation.PhysicalAddress s_physicalAddress = System.Net.NetworkInformation.PhysicalAddress.None;
-        protected internal static Int32 s_clock = Int32.MinValue;
-        protected internal static readonly DateTime s_epoch = new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
+        private static System.Net.NetworkInformation.PhysicalAddress s_physicalAddress = System.Net.NetworkInformation.PhysicalAddress.None;
+        private static Int32 s_clock = Int32.MinValue;
+        private static readonly DateTime s_epoch = new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
-        protected internal static readonly Object s_initLock = new Object();
-        protected internal static readonly Object s_clockLock = new Object();
-
-        protected UUIDv1()
-        {
-        }
+        private static readonly Object s_initLock = new Object();
+        private static readonly Object s_clockLock = new Object();
 
         /// <summary>
         /// Initialises a new GUID/UUID based on Version 1 (date-time and MAC address)

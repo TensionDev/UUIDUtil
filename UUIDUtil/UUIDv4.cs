@@ -21,12 +21,8 @@ namespace TensionDev.UUID
     /// <summary>
     /// Class Library to generate Universally Unique Identifier (UUID) / Globally Unique Identifier (GUID) based on Version 4 (random).
     /// </summary>
-    public class UUIDv4
+    public static class UUIDv4
     {
-        protected UUIDv4()
-        {
-        }
-
         /// <summary>
         /// Initialises a new GUID/UUID based on Version 4 (random)
         /// </summary>

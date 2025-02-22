@@ -23,12 +23,8 @@ namespace TensionDev.UUID
     /// <summary>
     /// Class Library to generate Universally Unique Identifier (UUID) / Globally Unique Identifier (GUID) based on Version 5 (SHA-1 namespace name-based).
     /// </summary>
-    public class UUIDv5
+    public static class UUIDv5
     {
-        protected UUIDv5()
-        {
-        }
-
         /// <summary>
         /// Initialises a new GUID/UUID based on Version 5 (SHA-1 namespace name-based)
         /// </summary>
