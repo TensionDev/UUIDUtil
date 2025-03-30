@@ -123,5 +123,84 @@ namespace XUnitTestProjectUUID
             byte[] clockSequence = new byte[] { 0x82, 0xa8 };
             Assert.Throws<ArgumentException>(() => TensionDev.UUID.UUIDv1.NewUUIDv1(DateTime.UtcNow, clockSequence, nodeID));
         }
+
+        [Fact]
+        public void TestIsUUIDv1Withv1()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv1.NewUUIDv1();
+
+            bool actual = TensionDev.UUID.UUIDv1.IsUUIDv1(uuid);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv1Withv3()
+        {
+            String name = "www.google.com";
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv3.NewUUIDv3(TensionDev.UUID.UUIDNamespace.DNS, name);
+
+            bool actual = TensionDev.UUID.UUIDv1.IsUUIDv1(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv1Withv4()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv4.NewUUIDv4();
+
+            bool actual = TensionDev.UUID.UUIDv1.IsUUIDv1(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv1Withv5()
+        {
+            String name = "www.contoso.com";
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv5.NewUUIDv5(TensionDev.UUID.UUIDNamespace.DNS, name);
+
+            bool actual = TensionDev.UUID.UUIDv1.IsUUIDv1(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv1Withv6()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv6.NewUUIDv6();
+
+            bool actual = TensionDev.UUID.UUIDv1.IsUUIDv1(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv1Withv7()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv7.NewUUIDv7();
+
+            bool actual = TensionDev.UUID.UUIDv1.IsUUIDv1(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestToDateTime()
+        {
+            DateTime expected = DateTime.UtcNow;
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv1.NewUUIDv1(expected);
+
+            DateTime actual = TensionDev.UUID.UUIDv1.ToDateTime(uuid);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void TestToUUIDv6()
+        {
+            DateTime expectedDateTime = DateTime.UtcNow;
+            TensionDev.UUID.Uuid uuid1 = TensionDev.UUID.UUIDv1.NewUUIDv1(expectedDateTime);
+            TensionDev.UUID.Uuid uuid6 = TensionDev.UUID.UUIDv1.ToUUIDv6(uuid1);
+
+            DateTime actualDateTime = TensionDev.UUID.UUIDv6.ToDateTime(uuid6);
+            bool actual = TensionDev.UUID.UUIDv6.IsUUIDv6(uuid6);
+            Assert.Equal(expectedDateTime, actualDateTime);
+            Assert.True(actual);
+        }
     }
 }

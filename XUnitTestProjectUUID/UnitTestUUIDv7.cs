@@ -86,7 +86,7 @@ namespace XUnitTestProjectUUID
             DateTime start = DateTime.Now;
             DateTime end = start.AddMilliseconds(1);
 
-            Parallel.For(start.Ticks, end.Ticks ,
+            Parallel.For(start.Ticks, end.Ticks,
                 ticks =>
                 {
                     DateTime dateTime = new DateTime(ticks, DateTimeKind.Local);
@@ -178,6 +178,72 @@ namespace XUnitTestProjectUUID
             byte[] randA = new byte[] { 0x7c, 0xc3 };
             byte[] randB = new byte[] { 0x98, 0xc4, 0xdc, 0x0c, 0x0c, 0x07, 0x39 };
             Assert.Throws<ArgumentException>(() => TensionDev.UUID.UUIDv7.NewUUIDv7(DateTime.UtcNow, randA, randB));
+        }
+
+        [Fact]
+        public void TestIsUUIDv7Withv1()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv1.NewUUIDv1();
+
+            bool actual = TensionDev.UUID.UUIDv7.IsUUIDv7(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv7Withv3()
+        {
+            String name = "www.google.com";
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv3.NewUUIDv3(TensionDev.UUID.UUIDNamespace.DNS, name);
+
+            bool actual = TensionDev.UUID.UUIDv7.IsUUIDv7(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv7Withv4()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv4.NewUUIDv4();
+
+            bool actual = TensionDev.UUID.UUIDv7.IsUUIDv7(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv7Withv5()
+        {
+            String name = "www.contoso.com";
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv5.NewUUIDv5(TensionDev.UUID.UUIDNamespace.DNS, name);
+
+            bool actual = TensionDev.UUID.UUIDv7.IsUUIDv7(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv7Withv6()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv6.NewUUIDv6();
+
+            bool actual = TensionDev.UUID.UUIDv7.IsUUIDv7(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv7Withv7()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv7.NewUUIDv7();
+
+            bool actual = TensionDev.UUID.UUIDv7.IsUUIDv7(uuid);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void TestToDateTime()
+        {
+            DateTime expected = DateTime.UtcNow;
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv7.NewUUIDv7(expected);
+
+            DateTime actual = TensionDev.UUID.UUIDv7.ToDateTime(uuid);
+            Assert.Equal(expected, actual, TimeSpan.FromMilliseconds(1));
         }
     }
 }

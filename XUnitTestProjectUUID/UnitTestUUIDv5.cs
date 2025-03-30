@@ -48,5 +48,61 @@ namespace XUnitTestProjectUUID
 
             Assert.Equal(expectedGuid, guid);
         }
+
+        [Fact]
+        public void TestIsUUIDv5Withv1()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv1.NewUUIDv1();
+
+            bool actual = TensionDev.UUID.UUIDv5.IsUUIDv5(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv5Withv3()
+        {
+            String name = "www.google.com";
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv3.NewUUIDv3(TensionDev.UUID.UUIDNamespace.DNS, name);
+
+            bool actual = TensionDev.UUID.UUIDv5.IsUUIDv5(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv5Withv4()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv4.NewUUIDv4();
+
+            bool actual = TensionDev.UUID.UUIDv5.IsUUIDv5(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv5Withv5()
+        {
+            String name = "www.contoso.com";
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv5.NewUUIDv5(TensionDev.UUID.UUIDNamespace.DNS, name);
+
+            bool actual = TensionDev.UUID.UUIDv5.IsUUIDv5(uuid);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv5Withv6()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv6.NewUUIDv6();
+
+            bool actual = TensionDev.UUID.UUIDv5.IsUUIDv5(uuid);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void TestIsUUIDv5Withv7()
+        {
+            TensionDev.UUID.Uuid uuid = TensionDev.UUID.UUIDv7.NewUUIDv7();
+
+            bool actual = TensionDev.UUID.UUIDv5.IsUUIDv5(uuid);
+            Assert.False(actual);
+        }
     }
 }

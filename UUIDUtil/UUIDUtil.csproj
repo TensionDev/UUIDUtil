@@ -4,10 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>TensionDev.UUID</AssemblyName>
     <RootNamespace>TensionDev.UUID</RootNamespace>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageId>TensionDev.UUID</PackageId>
-	<Version>2.2.0</Version>
+    <Version>2.3.0</Version>
     <Authors>TensionDev amsga</Authors>
     <Company>TensionDev</Company>
     <Product>TensionDev.UUID</Product>
@@ -19,7 +22,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>UUID GUID</PackageTags>
     <PackageReleaseNotes>Change in license to Apache License 2.0.
-Release with UUID / GUID Version 1, Version 3, Version 4 and Version 5, and Draft Versions 6 and 7.</PackageReleaseNotes>
+Release with UUID / GUID Version 1, Version 3, Version 4, Version 5, Versions 6 and 7.</PackageReleaseNotes>
     <NeutralLanguage>en-SG</NeutralLanguage>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

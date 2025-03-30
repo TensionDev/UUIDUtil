@@ -71,5 +71,15 @@ namespace TensionDev.UUID
 
             return Id;
         }
+
+        /// <summary>
+        /// Returns true if the Uuid specified is Version 5.
+        /// </summary>
+        /// <param name="uuid">The Uuid to be tested.</param>
+        /// <returns>Returns true if the Uuid specified is Version 5.</returns>
+        public static bool IsUUIDv5(Uuid uuid)
+        {
+            return (uuid.ToByteArray()[6] >> 4) == 0x05;
+        }
     }
 }

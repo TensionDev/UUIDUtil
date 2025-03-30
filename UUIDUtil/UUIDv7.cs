@@ -29,6 +29,9 @@ namespace TensionDev.UUID
         private static UInt16 s_counter = 0;
         private static readonly Object s_counterLock = new Object();
 
+        /// <summary>
+        /// The method of generating the clock sequence and Node ID.
+        /// </summary>
         public enum GenerationMethod
         {
             /// <summary>
@@ -49,6 +52,7 @@ namespace TensionDev.UUID
         /// <summary>
         /// Initialises a new GUID/UUID based on Version 7 (date-time)
         /// </summary>
+        /// <param name="method">The method of generating the clock sequence and Node ID.</param>
         /// <returns>A new Uuid object</returns>
         public static Uuid NewUUIDv7(GenerationMethod method = GenerationMethod.Random)
         {
@@ -59,6 +63,7 @@ namespace TensionDev.UUID
         /// Initialises a new GUID/UUID based on Version 7 (date-time), based on the given date and time.
         /// </summary>
         /// <param name="dateTime">Given Date and Time</param>
+        /// <param name="method">The method of generating the clock sequence and Node ID.</param>
         /// <returns>A new Uuid object</returns>
         public static Uuid NewUUIDv7(DateTime dateTime, GenerationMethod method = GenerationMethod.Random)
         {
@@ -198,6 +203,46 @@ namespace TensionDev.UUID
                 cryptoServiceProvider.GetBytes(fakeNode);
                 return fakeNode;
             }
+        }
+
+        /// <summary>
+        /// Returns true if the Uuid specified is Version 7.
+        /// </summary>
+        /// <param name="uuid">The Uuid to be tested.</param>
+        /// <returns>Returns true if the Uuid specified is Version 7.</returns>
+        public static bool IsUUIDv7(Uuid uuid)
+        {
+            return (uuid.ToByteArray()[6] >> 4) == 0x07;
+        }
+
+        /// <summary>
+        /// Returns the approximate DateTime used to generate the Uuid.
+        /// </summary>
+        /// <param name="uuid">The Uuid Version 7 object</param>
+        /// <returns>DateTime of the Uuid in UTC.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static DateTime ToDateTime(Uuid uuid)
+        {
+            if (!IsUUIDv7(uuid))
+                throw new ArgumentException(String.Format("{0} is not a Version 7 UUID.", uuid), nameof(uuid));
+
+            Byte[] time = new Byte[8];
+            Byte[] hex = uuid.ToByteArray();
+
+            time[0] = hex[0];
+            time[1] = hex[1];
+            time[2] = hex[2];
+            time[3] = hex[3];
+            time[4] = hex[4];
+            time[5] = hex[5];
+            time[6] = hex[6];
+            time[7] = hex[7];
+
+            Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
+            timeInterval >>= 16;
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeInterval);
+
+            return s_epoch.ToUniversalTime() + timeSpan;
         }
     }
 }

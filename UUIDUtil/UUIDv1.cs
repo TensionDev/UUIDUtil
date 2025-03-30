@@ -178,5 +178,85 @@ namespace TensionDev.UUID
 
             return BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder((Int16)result));
         }
+
+        /// <summary>
+        /// Returns true if the Uuid specified is Version 1.
+        /// </summary>
+        /// <param name="uuid">The Uuid to be tested.</param>
+        /// <returns>Returns true if the Uuid specified is Version 1.</returns>
+        public static bool IsUUIDv1(Uuid uuid)
+        {
+            return (uuid.ToByteArray()[6] >> 4) == 0x01;
+        }
+
+        /// <summary>
+        /// Returns the approximate DateTime used to generate the Uuid.
+        /// </summary>
+        /// <param name="uuid">The Uuid Version 1 object.</param>
+        /// <returns>DateTime of the Uuid in UTC.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static DateTime ToDateTime(Uuid uuid)
+        {
+            if (!IsUUIDv1(uuid))
+                throw new ArgumentException(String.Format("{0} is not a Version 1 UUID.", uuid), nameof(uuid));
+
+            Byte[] time = new Byte[8];
+            Byte[] hex = uuid.ToByteArray();
+
+            time[0] = (Byte)(hex[6] & 0x0F);
+            time[1] = hex[7];
+            time[2] = hex[4];
+            time[3] = hex[5];
+            time[4] = hex[0];
+            time[5] = hex[1];
+            time[6] = hex[2];
+            time[7] = hex[3];
+
+            Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
+            TimeSpan timeSpan = TimeSpan.FromTicks(timeInterval);
+
+            return s_epoch.ToUniversalTime() + timeSpan;
+        }
+
+        /// <summary>
+        /// Returns the Version 6 representation of the provided Version 1 Uuid.
+        /// </summary>
+        /// <param name="uuid">The Uuid Version 1 object.</param>
+        /// <returns>The converted Uuid Version 6 object.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Uuid ToUUIDv6(Uuid uuid)
+        {
+            if (!IsUUIDv1(uuid))
+                throw new ArgumentException(String.Format("{0} is not a Version 1 UUID.", uuid), nameof(uuid));
+
+            Byte[] time = new Byte[8];
+            Byte[] hex = uuid.ToByteArray();
+
+            time[0] = (Byte)(hex[6] & 0x0F);
+            time[1] = hex[7];
+            time[2] = hex[4];
+            time[3] = hex[5];
+            time[4] = hex[0];
+            time[5] = hex[1];
+            time[6] = hex[2];
+            time[7] = hex[3];
+
+            Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
+            timeInterval <<= 4;
+            time = BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(timeInterval));
+
+            hex[0] = time[0];
+            hex[1] = time[1];
+            hex[2] = time[2];
+            hex[3] = time[3];
+
+            hex[4] = time[4];
+            hex[5] = time[5];
+
+            hex[6] = (Byte)(((time[6] >> 4) & 0x0F) + 0x60);
+            hex[7] = (Byte)((time[6] << 4) + (time[7] >> 4));
+
+            return new Uuid(hex);
+        }
     }
 }

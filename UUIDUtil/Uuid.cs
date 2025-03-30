@@ -20,6 +20,9 @@ using System.Text.RegularExpressions;
 
 namespace TensionDev.UUID
 {
+    /// <summary>
+    /// Represents a Universally unique identifier (UUID).
+    /// </summary>
     public sealed class Uuid : IComparable<Uuid>, IEquatable<Uuid>
     {
         private const string INVALID_FORMAT_STRING = "The format of s is invalid";
@@ -41,6 +44,9 @@ namespace TensionDev.UUID
         /// </summary>
         public static readonly Uuid Max = new Uuid(uint.MaxValue, ushort.MaxValue, ushort.MaxValue, byte.MaxValue, byte.MaxValue, new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff });
 
+        /// <summary>
+        /// Initializes a new instance of the Uuid object whose value is all zeros.
+        /// </summary>
         public Uuid()
         {
             _time_low = 0;
@@ -238,6 +244,11 @@ namespace TensionDev.UUID
             return vs;
         }
 
+        /// <summary>
+        /// Compares the current instance with another object and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the objects being compared.</returns>
         public int CompareTo(object other)
         {
             if (other is Uuid u)
@@ -250,6 +261,11 @@ namespace TensionDev.UUID
             }
         }
 
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An UUID to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the objects being compared.</returns>
         public int CompareTo(Uuid other)
         {
             if (other is null)
@@ -505,21 +521,45 @@ namespace TensionDev.UUID
             return !(a == b);
         }
 
+        /// <summary>
+        /// Indicates whether the values of the first Uuid object is strictly less than the other.
+        /// </summary>
+        /// <param name="a">The first object to compare.</param>
+        /// <param name="b">The second object to compare.</param>
+        /// <returns>true if a is strictly less than b; otherwise, false.</returns>
         public static bool operator <(Uuid a, Uuid b)
         {
             return a.CompareTo(b) < 0;
         }
 
+        /// <summary>
+        /// Indicates whether the values of the first Uuid object is strictly greater than the other.
+        /// </summary>
+        /// <param name="a">The first object to compare.</param>
+        /// <param name="b">The second object to compare.</param>
+        /// <returns>true if a is strictly greater than b; otherwise, false.</returns>
         public static bool operator >(Uuid a, Uuid b)
         {
             return a.CompareTo(b) > 0;
         }
-
+        
+        /// <summary>
+        /// Indicates whether the values of the first Uuid object is less than or equal to the other.
+        /// </summary>
+        /// <param name="a">The first object to compare.</param>
+        /// <param name="b">The second object to compare.</param>
+        /// <returns>true if a is less than or equal to b; otherwise, false.</returns>
         public static bool operator <=(Uuid a, Uuid b)
         {
             return a.CompareTo(b) <= 0;
         }
 
+        /// <summary>
+        /// Indicates whether the values of the first Uuid object is greater than or equal to the other.
+        /// </summary>
+        /// <param name="a">The first object to compare.</param>
+        /// <param name="b">The second object to compare.</param>
+        /// <returns>true if a is greater than or equal to b; otherwise, false.</returns>
         public static bool operator >=(Uuid a, Uuid b)
         {
             return a.CompareTo(b) >= 0;
