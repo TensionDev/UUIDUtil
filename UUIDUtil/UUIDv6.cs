@@ -184,20 +184,7 @@ namespace TensionDev.UUID
             if (!IsUUIDv6(uuid))
                 throw new ArgumentException(String.Format("{0} is not a Version 6 UUID.", uuid), nameof(uuid));
 
-            Byte[] time = new Byte[8];
-            Byte[] hex = uuid.ToByteArray();
-
-            time[0] = hex[0];
-            time[1] = hex[1];
-            time[2] = hex[2];
-            time[3] = hex[3];
-            time[4] = hex[4];
-            time[5] = hex[5];
-            time[6] = (Byte)((Byte)((hex[6] & 0x0F) << 4) + (hex[7] >> 4));
-            time[7] = (Byte)(hex[7] << 4);
-
-            Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
-            timeInterval >>= 4;
+            long timeInterval = GetTimeInterval(uuid);
             TimeSpan timeSpan = TimeSpan.FromTicks(timeInterval);
 
             return s_epoch.ToUniversalTime() + timeSpan;
@@ -214,21 +201,10 @@ namespace TensionDev.UUID
             if (!IsUUIDv6(uuid))
                 throw new ArgumentException(String.Format("{0} is not a Version 6 UUID.", uuid), nameof(uuid));
 
-            Byte[] time = new Byte[8];
+            Int64 timeInterval = GetTimeInterval(uuid);
+
             Byte[] hex = uuid.ToByteArray();
-
-            time[0] = hex[0];
-            time[1] = hex[1];
-            time[2] = hex[2];
-            time[3] = hex[3];
-            time[4] = hex[4];
-            time[5] = hex[5];
-            time[6] = (Byte)((Byte)((hex[6] & 0x0F) << 4) + (hex[7] >> 4));
-            time[7] = (Byte)(hex[7] << 4);
-
-            Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
-            timeInterval >>= 4;
-            time = BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(timeInterval));
+            Byte[] time = BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(timeInterval));
 
             hex[0] = time[4];
             hex[1] = time[5];
@@ -242,6 +218,25 @@ namespace TensionDev.UUID
             hex[7] = time[1];
 
             return new Uuid(hex);
+        }
+
+        private static Int64 GetTimeInterval(Uuid uuid)
+        {
+            Byte[] hex = uuid.ToByteArray();
+            Byte[] time = new Byte[8];
+
+            time[0] = hex[0];
+            time[1] = hex[1];
+            time[2] = hex[2];
+            time[3] = hex[3];
+            time[4] = hex[4];
+            time[5] = hex[5];
+            time[6] = (Byte)((Byte)((hex[6] & 0x0F) << 4) + (hex[7] >> 4));
+            time[7] = (Byte)(hex[7] << 4);
+
+            Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
+            timeInterval >>= 4;
+            return timeInterval;
         }
     }
 }

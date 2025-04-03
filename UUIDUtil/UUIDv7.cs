@@ -226,8 +226,16 @@ namespace TensionDev.UUID
             if (!IsUUIDv7(uuid))
                 throw new ArgumentException(String.Format("{0} is not a Version 7 UUID.", uuid), nameof(uuid));
 
-            Byte[] time = new Byte[8];
+            long timeInterval = GetTimeInterval(uuid);
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeInterval);
+
+            return s_epoch.ToUniversalTime() + timeSpan;
+        }
+
+        private static Int64 GetTimeInterval(Uuid uuid)
+        {
             Byte[] hex = uuid.ToByteArray();
+            Byte[] time = new Byte[8];
 
             time[0] = hex[0];
             time[1] = hex[1];
@@ -240,9 +248,7 @@ namespace TensionDev.UUID
 
             Int64 timeInterval = System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt64(time, 0));
             timeInterval >>= 16;
-            TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeInterval);
-
-            return s_epoch.ToUniversalTime() + timeSpan;
+            return timeInterval;
         }
     }
 }
