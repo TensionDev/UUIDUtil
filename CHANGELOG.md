@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v2.3.1] - 2025-07-01
+[v2.3.1](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.3.1)
+
+### Fixed
+- Fixed Node ID for generated UUID v1 to check for valid MAC address.
+
+
 ## [v2.3.0] - 2025-03-30
 [v2.3.0](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.3.0)
 

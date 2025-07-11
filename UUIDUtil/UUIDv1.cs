@@ -15,6 +15,7 @@
 //   limitations under the License.
 
 using System;
+using System.Linq;
 
 namespace TensionDev.UUID
 {
@@ -127,14 +128,20 @@ namespace TensionDev.UUID
         {
             if (System.Net.NetworkInformation.PhysicalAddress.None.Equals(s_physicalAddress))
             {
-                System.Net.NetworkInformation.NetworkInterface[] networkInterfaces = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
-                if (networkInterfaces.Length > 0)
+                var networkInterfaces = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
+                foreach (var networkInterface in networkInterfaces)
                 {
-                    s_physicalAddress = networkInterfaces[0].GetPhysicalAddress();
+                    var address = networkInterface.GetPhysicalAddress();
+                    if (!address.Equals(System.Net.NetworkInformation.PhysicalAddress.None))
+                    {
+                        s_physicalAddress = address;
+                        break;
+                    }
                 }
-                else
+                if (s_physicalAddress.Equals(System.Net.NetworkInformation.PhysicalAddress.None))
                 {
-                    using (System.Security.Cryptography.RNGCryptoServiceProvider cryptoServiceProvider = new System.Security.Cryptography.RNGCryptoServiceProvider())
+                    // Fallback to random
+                    using (var cryptoServiceProvider = new System.Security.Cryptography.RNGCryptoServiceProvider())
                     {
                         Byte[] fakeNode = new Byte[6];
                         cryptoServiceProvider.GetBytes(fakeNode);
