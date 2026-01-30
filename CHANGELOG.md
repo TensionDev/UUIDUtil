@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v2.4.0] - 2026-01-30
+[v2.4.0](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.4.0)
+
+### Changed
+- Changed ToVariant1 to ToRfc4122Variant for clarity.
+- Changed ToVariant2 to ToMicrosoftVariant for clarity.
+
+
 ## [v2.3.1] - 2025-07-01
 [v2.3.1](https://github.com/TensionDev/UUIDUtil/releases/tag/v2.3.1)
 

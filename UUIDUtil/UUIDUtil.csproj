@@ -10,12 +10,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageId>TensionDev.UUID</PackageId>
-    <Version>2.3.1</Version>
+    <Version>2.4.0</Version>
     <Authors>TensionDev amsga</Authors>
     <Company>TensionDev</Company>
     <Product>TensionDev.UUID</Product>
-    <Description>A project to store various UUID functions within a library for future use.</Description>
-    <Copyright>Copyright (c) TensionDev 2021</Copyright>
+    <Description>TensionDev.UUID is a .NET library that supports multiple UUID versions (v1, v3, v4, v5, v6, v7) with strict RFC compliance.</Description>
+    <Copyright>Copyright (c) TensionDev 2021 - 2026</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/TensionDev/UUIDUtil</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TensionDev/UUIDUtil</RepositoryUrl>

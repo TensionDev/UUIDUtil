@@ -355,7 +355,7 @@ namespace XUnitTestProjectUUID
             Guid expected = new Guid("7d444840-9dc0-11d1-d245-5ffdce74fad2");
             TensionDev.UUID.Uuid uuid = new TensionDev.UUID.Uuid("7d444840-9dc0-11d1-b245-5ffdce74fad2");
 
-            Guid actual = uuid.ToVariant2();
+            Guid actual = uuid.ToMicrosoftVariant();
             Assert.Equal(expected, actual);
         }
 
@@ -365,7 +365,7 @@ namespace XUnitTestProjectUUID
             TensionDev.UUID.Uuid expected = new TensionDev.UUID.Uuid("7d444840-9dc0-11d1-9245-5ffdce74fad2");
             Guid guid = new Guid("7d444840-9dc0-11d1-d245-5ffdce74fad2");
 
-            TensionDev.UUID.Uuid actual = TensionDev.UUID.Uuid.ToVariant1(guid);
+            TensionDev.UUID.Uuid actual = TensionDev.UUID.Uuid.ToRfc4122Variant(guid);
             Assert.Equal(expected, actual);
         }
 

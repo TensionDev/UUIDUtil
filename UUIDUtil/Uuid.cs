@@ -1,6 +1,6 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 //
-//   Copyright 2021 TensionDev <TensionDev@outlook.com>
+//   Copyright 2021 - 2026 TensionDev <TensionDev@outlook.com>
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -26,7 +26,9 @@ namespace TensionDev.UUID
     public sealed class Uuid : IComparable<Uuid>, IEquatable<Uuid>
     {
         private const string INVALID_FORMAT_STRING = "The format of s is invalid";
-        private const string HEX_FORMAT_STRING = "{0:x2}";
+        private const string ONE_BYTE_HEX_FORMAT_STRING = "{0:x2}";
+        private const string TWO_BYTE_HEX_FORMAT_STRING = "{0:x4}";
+        private const string FOUR_BYTE_HEX_FORMAT_STRING = "{0:x8}";
         private readonly uint _time_low;
         private readonly ushort _time_mid;
         private readonly ushort _time_hi_and_version;
@@ -71,9 +73,9 @@ namespace TensionDev.UUID
             if (b.Length != 16)
                 throw new ArgumentException("b is not 16 bytes long.", nameof(b));
 
-            _time_low = BitConverter.ToUInt32(b, 0);
-            _time_mid = BitConverter.ToUInt16(b, 4);
-            _time_hi_and_version = BitConverter.ToUInt16(b, 6);
+            _time_low = (uint)(b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]);
+            _time_mid = (ushort)(b[4] << 8 | b[5]);
+            _time_hi_and_version = (ushort)(b[6] << 8 | b[7]);
             _clock_seq_hi_and_reserved = b[8];
             _clock_seq_low = b[9];
             Array.Copy(b, 10, _node, 0, _node.Length);
@@ -139,9 +141,9 @@ namespace TensionDev.UUID
                 }
             }
 
-            _time_low = BitConverter.ToUInt32(b, 0);
-            _time_mid = BitConverter.ToUInt16(b, 4);
-            _time_hi_and_version = BitConverter.ToUInt16(b, 6);
+            _time_low = (uint)(b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]);
+            _time_mid = (ushort)(b[4] << 8 | b[5]);
+            _time_hi_and_version = (ushort)(b[6] << 8 | b[7]);
             _clock_seq_hi_and_reserved = b[8];
             _clock_seq_low = b[9];
             Array.Copy(b, 10, _node, 0, _node.Length);
@@ -166,9 +168,9 @@ namespace TensionDev.UUID
             if (f.Length != 6)
                 throw new ArgumentException("f is not 6 bytes long");
 
-            _time_low = (uint)System.Net.IPAddress.HostToNetworkOrder((int)a);
-            _time_mid = (ushort)System.Net.IPAddress.HostToNetworkOrder((Int16)b);
-            _time_hi_and_version = (ushort)System.Net.IPAddress.HostToNetworkOrder((Int16)c);
+            _time_low = a;
+            _time_mid = b;
+            _time_hi_and_version = c;
             _clock_seq_hi_and_reserved = d;
             _clock_seq_low = e;
             f.CopyTo(_node, 0);
@@ -190,9 +192,9 @@ namespace TensionDev.UUID
         /// <param name="k">The next byte of the Uuid.</param>
         public Uuid(uint a, ushort b, ushort c, byte d, byte e, byte f, byte g, byte h, byte i, byte j, byte k) : this()
         {
-            _time_low = (uint)System.Net.IPAddress.HostToNetworkOrder((int)a);
-            _time_mid = (ushort)System.Net.IPAddress.HostToNetworkOrder((Int16)b);
-            _time_hi_and_version = (ushort)System.Net.IPAddress.HostToNetworkOrder((Int16)c);
+            _time_low = a;
+            _time_mid = b;
+            _time_hi_and_version = c;
             _clock_seq_hi_and_reserved = d;
             _clock_seq_low = e;
             _node[0] = f;
@@ -203,12 +205,6 @@ namespace TensionDev.UUID
             _node[5] = k;
         }
 
-        //
-        // Summary:
-        //     Initializes a new instance of the Uuid object.
-        //
-        // Returns:
-        //     A new Uuid object.
         /// <summary>
         /// Initializes a new instance of the Uuid object.
         /// </summary>
@@ -344,12 +340,17 @@ namespace TensionDev.UUID
         {
             Byte[] vs = new Byte[16];
 
-            BitConverter.GetBytes(_time_low).CopyTo(vs, 0);
-            BitConverter.GetBytes(_time_mid).CopyTo(vs, 4);
-            BitConverter.GetBytes(_time_hi_and_version).CopyTo(vs, 6);
-            BitConverter.GetBytes(_clock_seq_hi_and_reserved).CopyTo(vs, 8);
-            BitConverter.GetBytes(_clock_seq_low).CopyTo(vs, 9);
-            _node.CopyTo(vs, 10);
+            vs[0] = (Byte)(_time_low >> 24);
+            vs[1] = (Byte)(_time_low >> 16);
+            vs[2] = (Byte)(_time_low >> 8);
+            vs[3] = (Byte)(_time_low);
+            vs[4] = (Byte)(_time_mid >> 8);
+            vs[5] = (Byte)(_time_mid);
+            vs[6] = (Byte)(_time_hi_and_version >> 8);
+            vs[7] = (Byte)(_time_hi_and_version);
+            vs[8] = _clock_seq_hi_and_reserved;
+            vs[9] = _clock_seq_low;
+            Array.Copy(_node, 0, vs, 10, 6);
 
             return vs;
         }
@@ -364,10 +365,10 @@ namespace TensionDev.UUID
         }
 
         /// <summary>
-        /// Return the Variant 2 version in System.Guid.
+        /// Return the Microsoft Variant version in System.Guid.
         /// </summary>
         /// <returns>A System.Guid object.</returns>
-        public Guid ToVariant2()
+        public Guid ToMicrosoftVariant()
         {
             byte newClockSeq = (byte)(_clock_seq_hi_and_reserved & 0x1F);
             newClockSeq = (byte)(newClockSeq | 0xC0);
@@ -379,11 +380,11 @@ namespace TensionDev.UUID
         }
 
         /// <summary>
-        /// Returns the Variant 1 version in TensionDev.UUID.Uuid.
+        /// Returns the RFC 4122 Variant version in TensionDev.UUID.Uuid.
         /// </summary>
         /// <param name="guid">The System.Guid object to convert.</param>
         /// <returns>A TensionDev.UUID.Uuid object.</returns>
-        public static Uuid ToVariant1(Guid guid)
+        public static Uuid ToRfc4122Variant(Guid guid)
         {
             Uuid variant2 = new Uuid(guid.ToString());
             byte newClockSeq = (byte)(variant2._clock_seq_hi_and_reserved & 0x3F);
@@ -443,16 +444,19 @@ namespace TensionDev.UUID
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(BitConverter.ToString(BitConverter.GetBytes(_time_low)).Replace("-", ""));
+            // RFC 4122 big-endian layout
+            sb.AppendFormat(FOUR_BYTE_HEX_FORMAT_STRING, _time_low);               // 8 hex digits
             sb.Append("-");
-            sb.Append(BitConverter.ToString(BitConverter.GetBytes(_time_mid)).Replace("-", ""));
+            sb.AppendFormat(TWO_BYTE_HEX_FORMAT_STRING, _time_mid);               // 4 hex digits
             sb.Append("-");
-            sb.Append(BitConverter.ToString(BitConverter.GetBytes(_time_hi_and_version)).Replace("-", ""));
+            sb.AppendFormat(TWO_BYTE_HEX_FORMAT_STRING, _time_hi_and_version);    // 4 hex digits
             sb.Append("-");
-            sb.AppendFormat(HEX_FORMAT_STRING, _clock_seq_hi_and_reserved);
-            sb.AppendFormat(HEX_FORMAT_STRING, _clock_seq_low);
+            sb.AppendFormat(ONE_BYTE_HEX_FORMAT_STRING, _clock_seq_hi_and_reserved);
+            sb.AppendFormat(ONE_BYTE_HEX_FORMAT_STRING, _clock_seq_low);
             sb.Append("-");
-            sb.Append(BitConverter.ToString(_node).Replace("-", ""));
+
+            foreach (byte b in _node)
+                sb.AppendFormat(ONE_BYTE_HEX_FORMAT_STRING, b);
 
             return sb.ToString().ToLower();
         }
@@ -461,12 +465,15 @@ namespace TensionDev.UUID
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(BitConverter.ToString(BitConverter.GetBytes(_time_low)).Replace("-", ""));
-            sb.Append(BitConverter.ToString(BitConverter.GetBytes(_time_mid)).Replace("-", ""));
-            sb.Append(BitConverter.ToString(BitConverter.GetBytes(_time_hi_and_version)).Replace("-", ""));
-            sb.AppendFormat(HEX_FORMAT_STRING, _clock_seq_hi_and_reserved);
-            sb.AppendFormat(HEX_FORMAT_STRING, _clock_seq_low);
-            sb.Append(BitConverter.ToString(_node).Replace("-", ""));
+            // RFC 4122 big-endian layout
+            sb.AppendFormat(FOUR_BYTE_HEX_FORMAT_STRING, _time_low);               // 8 hex digits
+            sb.AppendFormat(TWO_BYTE_HEX_FORMAT_STRING, _time_mid);               // 4 hex digits
+            sb.AppendFormat(TWO_BYTE_HEX_FORMAT_STRING, _time_hi_and_version);    // 4 hex digits
+            sb.AppendFormat(ONE_BYTE_HEX_FORMAT_STRING, _clock_seq_hi_and_reserved);
+            sb.AppendFormat(ONE_BYTE_HEX_FORMAT_STRING, _clock_seq_low);
+
+            foreach (byte b in _node)
+                sb.AppendFormat(ONE_BYTE_HEX_FORMAT_STRING, b);
 
             return sb.ToString().ToLower();
         }
@@ -542,7 +549,7 @@ namespace TensionDev.UUID
         {
             return a.CompareTo(b) > 0;
         }
-        
+
         /// <summary>
         /// Indicates whether the values of the first Uuid object is less than or equal to the other.
         /// </summary>
